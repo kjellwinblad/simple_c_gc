@@ -54,7 +54,7 @@ Compile and Test
 License
 -------
 
-   Copyright 2019 Kjell Winblad (kjellwinblad@gmail.com, winsh.me)
+   Copyright 2019 Kjell Winblad (kjellwinblad@gmail.com, http://winsh.me)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
