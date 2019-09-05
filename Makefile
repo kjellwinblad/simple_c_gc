@@ -26,7 +26,7 @@ test.bin: $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS)
 
 
-.PHONY: clean test run_test_continusly CMakeLists.txt cmake_compile
+.PHONY: clean test run_test_continusly CMakeLists.txt cmake_compile clang_format
 
 test: test.bin
 	./test.bin > /dev/null &&\
