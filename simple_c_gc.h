@@ -40,17 +40,14 @@
  * @param my_malloc Simple C GC will use this to allocated memory
  * @param my_free Simple C GC will use this to free memory
  */
-int scgc_start_gced_code(int (*main)(int, char *[]),
-                         int argc,
-                         char *argv[],
-                         void* (*my_malloc)( size_t ),
-                         void (*my_free)( void* ));
+int scgc_start_gced_code(int (*main)(int, char *[]), int argc, char *argv[],
+                         void *(*my_malloc)(size_t), void (*my_free)(void *));
 
 /**
  * Allocate a new memory block that will be garbage collected
  *
  * @param size The size of the new memory block
  */
-void* scgc_new(size_t size);
+void *scgc_new(size_t size);
 
 #endif

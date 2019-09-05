@@ -53,5 +53,8 @@ cmake_compile: CMakeLists.txt
 	mkdir cmake_mkdir || true
 	cd cmake_mkdir && cmake ..
 
+clang_format:
+	clang-format -style="{BasedOnStyle: LLVM}" -i *.c *.h
+
 clean:
 	rm -f $(ODIR)/*.o *~ core $(IDIR)/*~ test.bin CMakeLists.txt
