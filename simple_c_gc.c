@@ -111,7 +111,7 @@ static char * scgc_to_string(void * vp){
   sprintf(str,
           "{.address=%p, .base_address=%p, magic_number=%lu}",
           v->address,
-          v->base,
+          (void*)v->base,
           v->magic_number);
   return str;
 }
@@ -194,7 +194,7 @@ static void scgc_get_stack_bottom_and_mark() {
     ? ycf_find_stack_bottom_and_mark_conservative_helper
     : (void(*)(void))(NULL);
 
-  return bottom();
+  bottom();
 }
 
 static void scgc_mark_reachable_objects_in_region(void* start, void* end){
@@ -266,12 +266,12 @@ static void scgc_unmark_objects(){
 }
 
 static void scgc_do_gc(bool no_stack){
-  unsigned int objects_before = scgc_objects->size;
+  /* unsigned int objects_before = scgc_objects->size; */
   scgc_mark_reachable_objects(no_stack);
   scgc_remove_unmarked_objects();
   scgc_unmark_objects();
-  unsigned int objects_after = scgc_objects->size;
-  unsigned int objects_removed = objects_before - objects_after;
+  /* unsigned int objects_after = scgc_objects->size; */
+  /* unsigned int objects_removed = objects_before - objects_after; */
   /* printf("GC: before=%u, after=%u, removed=%u\n", */
   /*        objects_before, */
   /*        objects_after, */
@@ -281,10 +281,8 @@ static void scgc_do_gc(bool no_stack){
 static void scgc_gc(){
   scgc_allocs_until_gc--;
   if(scgc_allocs_until_gc <= 0){
-    unsigned int objects_before = scgc_objects->size;
     scgc_do_gc(false);
     unsigned int objects_after = scgc_objects->size;
-    unsigned int objects_removed = objects_before - objects_after;
     scgc_allocs_until_gc = objects_after*2;
     if(scgc_allocs_until_gc < SCGC_MIN_ALLOCS_UNTIL_FREE){
       scgc_allocs_until_gc = SCGC_MIN_ALLOCS_UNTIL_FREE;

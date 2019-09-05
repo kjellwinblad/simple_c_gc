@@ -1,6 +1,13 @@
 IDIR = .
 CC = cc
-CFLAGS = -I$(IDIR)
+
+ifdef MODERN_CC
+	EXTRA_C_FLAGS = -g -O03 -std=c99 -pedantic -Wall
+else
+	EXTRA_C_FLAGS =
+endif
+
+CFLAGS = -I$(IDIR) $(EXTRA_C_FLAGS)
 
 ODIR = .
 LDIR =

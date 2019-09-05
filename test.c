@@ -23,8 +23,8 @@ static void my_free( void* ptr ) {
 int my_main(int argc,
             char *argv[]){
   void ** my = scgc_new(100);
-  printf("my %p %p\n",my,&my);
-  for(int i; i < 100000; i++){
+  printf("my %p %p\n",(void*)my,(void*)&my);
+  for(int i = 0; i < 100000; i++){
     my[0] = scgc_new(32);
     my[1] = scgc_new(32);
     my[2] = scgc_new(32);
