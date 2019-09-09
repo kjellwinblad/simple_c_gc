@@ -1,6 +1,7 @@
 #include "simple_c_gc.h"
-#include "stdio.h"
-#include "stdlib.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 static size_t nr_of_objects_created = 0;
 static size_t nr_of_objects = 0;
@@ -21,6 +22,9 @@ static void my_free(void *ptr) {
 }
 
 int my_main(int argc, char *argv[]) {
+  if (argc == 2 && strcmp(argv[1], "-enable_gc_info") == 0) {
+    scgc_enable_print_gc_info();
+  }
   void **my = scgc_new(100);
   printf("my %p %p\n", (void *)my, (void *)&my);
   for (int i = 0; i < 100000; i++) {

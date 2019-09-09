@@ -50,4 +50,8 @@ int scgc_start_gced_code(int (*main)(int, char *[]), int argc, char *argv[],
  */
 void *scgc_new(size_t size);
 
+/**
+ * Enables printing of garbage collection information
+ */
+void scgc_enable_print_gc_info(void);
 #endif

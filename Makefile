@@ -7,6 +7,17 @@ else
 	EXTRA_C_FLAGS =
 endif
 
+ifdef ADD_SAN
+	CC = clang
+	EXTRA_C_FLAGS = -std=c99 -Wall -pedantic -g -O00 -fsanitize-blacklist=.misc/clang_blacklist.txt -fsanitize=address -fno-omit-frame-pointer
+	USE_GC_STRING = -use_gc
+endif
+
+ifdef MEM_SAN
+	CC = clang
+	EXTRA_C_FLAGS = -std=c99 -Wall -pedantic -g -O00 -fsanitize-blacklist=.misc/clang_blacklist.txt -fsanitize=memory -fno-omit-frame-pointer
+endif
+
 CFLAGS = -I$(IDIR) $(EXTRA_C_FLAGS)
 
 ODIR = .
@@ -26,17 +37,32 @@ test.bin: $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS)
 
 
-.PHONY: clean test run_test_continusly CMakeLists.txt cmake_compile clang_format
+.PHONY: clean test run_test_continusly CMakeLists.txt cmake_compile clang_format add_san_test mem_san_test modern_test
 
 test: test.bin
 	./test.bin > /dev/null &&\
 	printf "\n\n\033[0;32mALL TESTS PASSED!\033[0m\n\n\n" ||\
 	printf "\n\n\033[0;31mTEST FAILED!\033[0m\n\n\n"
 
-test_valgrind: test.bin
+valgrind_test:
+	make clean
+	make EXTRA_C_FLAGS="-g -O01"
 	valgrind --undef-value-errors=no ./test.bin > /dev/null &&\
 	printf "\n\n\033[0;32mALL TESTS PASSED!\033[0m\n\n\n" ||\
 	printf "\n\n\033[0;31mTEST FAILED!\033[0m\n\n\n"
+
+add_san_test:
+	make clean
+	make ADD_SAN=1 test
+
+mem_san_test:
+	make clean
+	make MEM_SAN=1 test
+
+modern_test:
+	make clean
+	make MODERN_CC=1 test
+
 
 run_test_continusly:
 	inotifywait -e close_write,moved_to,create -m ./*.c ./*.h | while read -r directory events filename; do gtags ; make test ; done

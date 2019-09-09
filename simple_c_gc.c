@@ -33,6 +33,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+static bool scgc_print_gc_info = false;
 static ChainedHashSet *scgc_objects;
 static void *scgc_stack_top;
 
@@ -243,16 +244,16 @@ static void scgc_unmark_objects() {
 }
 
 static void scgc_do_gc(bool no_stack) {
-  /* unsigned int objects_before = scgc_objects->size; */
+  unsigned int objects_before = scgc_objects->size;
   scgc_mark_reachable_objects(no_stack);
   scgc_remove_unmarked_objects();
   scgc_unmark_objects();
-  /* unsigned int objects_after = scgc_objects->size; */
-  /* unsigned int objects_removed = objects_before - objects_after; */
-  /* printf("GC: before=%u, after=%u, removed=%u\n", */
-  /*        objects_before, */
-  /*        objects_after, */
-  /*        objects_removed); */
+  if (scgc_print_gc_info) {
+    unsigned int objects_after = scgc_objects->size;
+    unsigned int objects_removed = objects_before - objects_after;
+    fprintf(stderr, "GC: before=%u, after=%u, removed=%u\n", objects_before,
+            objects_after, objects_removed);
+  }
 }
 
 static void scgc_gc() {
@@ -289,6 +290,7 @@ int scgc_start_gced_code(int (*main)(int, char *[]), int argc, char *argv[],
 }
 
 void *scgc_new(size_t size) {
+  scgc_gc();
   scgc_object *new = scgc_malloc(size + sizeof(scgc_object));
   scgc_object_ref new_ref;
   unsigned long magic_number = (unsigned long)rand();
@@ -299,8 +301,7 @@ void *scgc_new(size_t size) {
   new_ref.base = new;
   new_ref.magic_number = magic_number;
   scgc_global_set_put(new_ref);
-  /*  */
-  volatile void *data = new->data;
-  scgc_gc();
-  return (void *)data;
+  return new->data;
 }
+
+void scgc_enable_print_gc_info() { scgc_print_gc_info = true; }
