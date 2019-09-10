@@ -26,18 +26,20 @@ int my_main(int argc, char *argv[]) {
     scgc_enable_print_gc_info();
   }
   void **my = scgc_new(100);
-  printf("my %p %p\n", (void *)my, (void *)&my);
+  FILE * fp = fopen (".tmp_out","w");
+  fprintf(fp, "my %p %p\n", (void *)my, (void *)&my);
   for (int i = 0; i < 100000; i++) {
     my[0] = scgc_new(32);
     my[1] = scgc_new(32);
     my[2] = scgc_new(32);
     ((void **)my[2])[0] = scgc_new(32);
     ((void **)my[2])[1] = scgc_new(32);
-    printf("test1 %p\n", ((void **)my[0])[0]);
-    printf("test2 %p\n", ((void **)my[1])[0]);
-    printf("test3 %p\n", ((void ***)my[2])[0][0]);
-    printf("test4 %p\n", ((void ***)my[2])[1][0]);
+    fprintf(fp, "test1 %p\n", ((void **)my[0])[0]);
+    fprintf(fp, "test2 %p\n", ((void **)my[1])[0]);
+    fprintf(fp, "test3 %p\n", ((void ***)my[2])[0][0]);
+    fprintf(fp, "test4 %p\n", ((void ***)my[2])[1][0]);
   }
+  fclose (fp);
   return 0;
 }
 

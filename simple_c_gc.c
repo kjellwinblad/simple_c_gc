@@ -224,6 +224,9 @@ static void scgc_collect_unmarked_traverser(size_t index, void *v,
 static void scgc_remove_unmarked_objects() {
   size_t nr_of_candidates = scgc_objects->size;
   void **objects_to_remove = scgc_malloc(sizeof(void *) * nr_of_candidates);
+  for (size_t i = 0; i < nr_of_candidates; i++) {
+    objects_to_remove[i] = NULL;
+  }
   ch_set_traverse(scgc_objects, scgc_collect_unmarked_traverser,
                   objects_to_remove);
   for (size_t i = 0; i < nr_of_candidates; i++) {

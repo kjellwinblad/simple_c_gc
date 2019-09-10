@@ -363,6 +363,4 @@ static inline char *sl_set_to_string(void *setParam) {
   return stringBuffer;
 }
 
-static inline bool sl_set_is_concurrent() { return false; }
-
 #endif

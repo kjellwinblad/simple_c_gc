@@ -29,6 +29,7 @@
 #define CHAINED_HASH_SET_H
 
 #include "sorted_list_set.h"
+#include <stdint.h>
 
 #define CHAIN_LENGHT_EXPAND_THRESHOLD 2
 #define CHAIN_LENGHT_SHRINK_THRESHOLD 0.5
@@ -78,11 +79,11 @@ static const unsigned char BitReverseTable256[] = {
     0x0F, 0x8F, 0x4F, 0xCF, 0x2F, 0xAF, 0x6F, 0xEF, 0x1F, 0x9F, 0x5F, 0xDF,
     0x3F, 0xBF, 0x7F, 0xFF};
 
-static inline unsigned int reverse_bits(unsigned int v) {
-  return (BitReverseTable256[v & 0xff] << 24) |
-         (BitReverseTable256[(v >> 8) & 0xff] << 16) |
-         (BitReverseTable256[(v >> 16) & 0xff] << 8) |
-         (BitReverseTable256[(v >> 24) & 0xff]);
+static inline uint32_t reverse_bits(uint32_t v) {
+  return (((uint32_t)BitReverseTable256[v & 0xff]) << 24) |
+         (((uint32_t)BitReverseTable256[(v >> 8) & 0xff]) << 16) |
+         (((uint32_t)BitReverseTable256[(v >> 16) & 0xff]) << 8) |
+         (((uint32_t)BitReverseTable256[(v >> 24) & 0xff]));
 }
 
 static inline void ch_set_increase_size(ChainedHashSet *set) {
