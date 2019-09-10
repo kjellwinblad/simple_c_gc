@@ -93,6 +93,9 @@ cmake_compile: CMakeLists.txt
 	mkdir cmake_mkdir || true
 	cd cmake_mkdir && cmake ..
 
+clang_tidy:
+	ls *.c | xargs -I{} -n1 clang-tidy -warnings-as-errors=*  {} -- $(CFLAGS)
+
 clang_format:
 	clang-format -style="{BasedOnStyle: LLVM}" -i *.c *.h
 
