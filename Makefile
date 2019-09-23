@@ -7,6 +7,12 @@ else
 	EXTRA_C_FLAGS =
 endif
 
+ifdef CC_32_BIT
+	EXTRA_C_FLAGS = -m32 -g -O03 -std=c99 -pedantic -Wall
+else
+	EXTRA_C_FLAGS =
+endif
+
 ifdef ADD_SAN
 	CC = clang
 	EXTRA_C_FLAGS = -std=c99 -Wall -pedantic -g -O00 -fsanitize-blacklist=.misc/clang_blacklist.txt -fsanitize=address -fno-omit-frame-pointer
@@ -77,6 +83,10 @@ test_modern_cc:
 	make clean
 	make MODERN_CC=1 test
 
+test_32_bit:
+	make clean
+	make CC_32_BIT=1 test
+	make clean
 
 run_test_continusly:
 	inotifywait -e close_write,moved_to,create -m ./*.c ./*.h | while read -r directory events filename; do gtags ; make test ; done
